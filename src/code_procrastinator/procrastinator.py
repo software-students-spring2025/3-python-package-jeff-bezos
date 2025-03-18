@@ -96,3 +96,12 @@ def excuse_wrapper(func):
         else:
             print(end_message[1])
     return wrapper
+
+def procrastinate(max_time, random_tasks):
+    delays = set()
+    while len(delays) < random_tasks:
+        delays.add(random.randint(0, max_time))
+
+    for delay in delays:
+        print(f"Procrastinating for {delay} seconds...")
+        time.sleep(delay)
