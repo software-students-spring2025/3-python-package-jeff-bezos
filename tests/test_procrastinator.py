@@ -7,7 +7,7 @@ class Tests:
         assert string == "Hello World"
 
 # Second test group: tests for the reaffirm_program function.
-from src.code_procrastinator.procrastinator import reaffirm_program, POSITIVE_RESPONSES, DEFAULT_RESPONSES
+from src.code_procrastinator.procrastinator import reaffirm_program, procrastinate, time, POSITIVE_RESPONSES, DEFAULT_RESPONSES
 
 def test_reaffirm_program_with_positive_input(capsys):
     # Provide a message containing at least one positive keyword.
@@ -34,3 +34,29 @@ def test_reaffirm_program_with_negative_input(capsys):
     
     # None since the decorator skips execution.
     assert result is None
+
+# Tests for procrasintaor 
+@pytest.fixture
+def mock_sleep(monkeypatch):
+    # Do nothing, preventing actual sleep
+    def fake_sleep(_):
+        pass
+    monkeypatch.setattr(time, "sleep", fake_sleep)
+
+def test_procrastinator(mock_sleep, capsys):
+    # Provide a positive integer for the max time per delay and amount of delays
+    seconds = 10
+    delay_count = 3
+
+    delays = procrastinate(seconds, delay_count)
+
+    # The output should include 3 console responses each taking 10 seconds or less to print
+    assert len(delays) == delay_count
+    assert all(0 <= d <= seconds for d in delays)
+
+    captured = capsys.readouterr()
+    output_lines = captured.out.strip().split("\n")
+
+    # Check if the correct number of lines were printed
+    assert len(output_lines) == delay_count
+    assert all("Procrastinating for" in line for line in output_lines)
