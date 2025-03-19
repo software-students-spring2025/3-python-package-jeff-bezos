@@ -2,6 +2,7 @@ import random
 import functools
 import time
 import webbrowser
+import os
 import pytest
 
 # --- Keywords and Responses for Reaffirmation ---
@@ -108,9 +109,10 @@ def print_excuse():
         "I'll do it tomorrow",
         "Not in the right headspace today... I'll just go to bed",
         "Creativity is hard, you can't just have ideas on command",
-        "If it weren’t for the last minute, nothing would get done"
+        "If it weren’t for the last minute, nothing would get done",
+        "What am I even doing..."
     ]
-    print(random.choice(responses))
+    print(random.choice(responses), flush=True)
 
 def mindlessly_browse():
     websites = [
@@ -119,15 +121,23 @@ def mindlessly_browse():
         "https://www.youtube.com/",
         "https://www.sporcle.com/games/"
     ]
-    print("Let's take a internet break! :D")
-    webbrowser.open(random.choice(websites))
+    site = random.choice(websites)
+    print(f"Let's take a internet break! :D {site}")
+    webbrowser.open(site)
+
 
 def procrastinate(max_time, delay_count):
+    if max_time <= 0:
+        raise(ValueError("Error: max_time must be greater than 0 - Hey let me procrastinate for atleast a litte!"))
+    
+    if delay_count <= 0:
+        raise(ValueError("Error: delay_count must be greater than 0 - Hey let me procrastinate for atleast a litte!"))
+
     actions = [print_excuse, mindlessly_browse]
 
     delays = set()
     while len(delays) < delay_count:
-        delays.add(random.randint(1, max_time))
+        delays.add(random.randint(0, max_time))
 
     for delay in delays:
         random.choice(actions)()
