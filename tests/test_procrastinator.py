@@ -1,10 +1,34 @@
 import pytest
+from src.code_procrastinator.procrastinator import excuse_wrapper
+import logging
+logger = logging.getLogger(__name__)
 
 # First test group: a simple hello world test.
 class Tests:
     def test_hello_world(self):
         string = "Hello World"
         assert string == "Hello World"
+
+def test_excuse_function_outputs(capsys):
+    @excuse_wrapper
+    def add(x, y):
+        return x + y
+    
+    add(1, 2)
+    output = capsys.readouterr().out.strip().split("\n")
+    # First response expected
+    assert output[0] in ["Alright, let's get started!", "Preparing to output solution...", 
+                         "Optimizing best possible answer"]
+    
+    # Second response expected
+    assert output[3] in [
+            "Almost done! Just need a little more time...", 
+            "Wait, I just realized there's a better way to do this... let me rethink everything.",
+            "Someone just deleted my work... I need to start over again..."
+        ]
+    
+    # Last response expected
+    assert output[4] in ["Ok done!", "TBH... forget this I'll do it tomorrow."]
 
 # Second test group: tests for the reaffirm_program function.
 from src.code_procrastinator.procrastinator import reaffirm_program, procrastinate, time, POSITIVE_RESPONSES, DEFAULT_RESPONSES
@@ -34,6 +58,8 @@ def test_reaffirm_program_with_negative_input(capsys):
     
     # None since the decorator skips execution.
     assert result is None
+
+
 
 # Tests for procrasintaor 
 @pytest.fixture
