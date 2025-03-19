@@ -1,4 +1,7 @@
 import pytest
+from src.code_procrastinator.procrastinator import excuse_wrapper, EXCUSE_INIT_MESSAGE, EXCUSE_MESSAGE, EXCUSE_END_MESSAGE
+import logging
+logger = logging.getLogger(__name__)
 
 # First test group: a simple hello world test.
 class Tests:
@@ -34,7 +37,6 @@ def test_reaffirm_program_with_negative_input(capsys):
     
     # None since the decorator skips execution.
     assert result is None
-
 
 # Tests for procrastinator 
 @pytest.fixture
