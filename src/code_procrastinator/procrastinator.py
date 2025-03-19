@@ -3,6 +3,10 @@ import functools
 import time
 import pytest
 
+class IllDoItLaterException(Exception):
+    def __init__(self):
+        super().__init__(random.choice(FAILURE_MESSAGE))
+
 # --- Keywords and Responses for Reaffirmation ---
 POSITIVE_KEYWORDS = [
     "good", "great", "awesome", "fantastic", "encourage", "please", "reassure",
@@ -37,6 +41,20 @@ EXCUSE_MESSAGE = [
         ]
 
 EXCUSE_END_MESSAGE = ["Ok done!", "TBH... forget this I'll do it tomorrow."]
+
+# Responses for random_run
+FAILURE_MESSAGE = [
+    "Oh wait, I left my oven running. Sorry, but I cant run this code right now, I have to go...",
+    "Eh, this looks boring. I dont really feel like doing this right now, maybe later.",
+    "I'll run this I promise, I just like, I don't know, feel overwhelmed. There's too much pressure."
+]
+
+RUN_MESSAGE = [
+    "Fine, I'll do it...",
+    "Ugh, I guess I'll run this now.",
+    "Alright, but only because you insist.",
+    "I was totally going to do this anyway...",
+]
 
 # --- Decorator to Require Positive Input ---
 def require_positive_input(func):
@@ -109,4 +127,19 @@ def procrastinate(max_time, delay_count):
     for delay in delays:
         print(f"Procrastinating for {delay} seconds...")
         time.sleep(delay)
-    return delays
+    return delays   
+
+def random_fail_wrapper(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        value = random.randint(1, 100)
+        if value < 50:
+            raise IllDoItLaterException()
+        else:
+            print(random.choice(RUN_MESSAGE))
+            return func(*args, **kwargs)
+    return wrapper
+def random_procrastinate(func):
+    wrappers = [random_fail_wrapper, excuse_wrapper, reaffirm_program]
+    selected_wrapper = random.choice(wrappers)
+    return selected_wrapper(func)

@@ -10,7 +10,7 @@ class Tests:
         assert string == "Hello World"
 
 # Second test group: tests for the reaffirm_program function.
-from src.code_procrastinator.procrastinator import reaffirm_program, procrastinate, time, POSITIVE_RESPONSES, DEFAULT_RESPONSES
+from src.code_procrastinator.procrastinator import reaffirm_program, procrastinate, time, POSITIVE_RESPONSES, DEFAULT_RESPONSES, random_fail_wrapper, IllDoItLaterException, random_procrastinate
 
 def test_reaffirm_program_with_positive_input(capsys):
     # Provide a message containing at least one positive keyword.
@@ -81,3 +81,67 @@ def test_excuse_function_outputs(capsys):
     
     # Last response expected
     assert output[4] in EXCUSE_END_MESSAGE
+
+def test_random_fail_wrapper_executes():
+    """Test that random_run executes the function when it does not raise an exception."""
+    @random_fail_wrapper
+    def test_func():
+        return "Function executed!"
+
+    # Run multiple times to account for randomness
+    for _ in range(10):
+        try:
+            result = test_func()
+            assert result == "Function executed!"
+        except IllDoItLaterException:
+            pass  # It's okay if it fails, since it's expected sometimes
+
+def test_random_fail_wrapper_raises_exception():
+    """Test that random_run sometimes raises IllDoItLaterException."""
+    @random_fail_wrapper
+    def test_func():
+        return "Function executed!"
+
+    raised = False
+    for _ in range(10):  # Run multiple times to increase the chance of failure
+        try:
+            test_func()
+        except IllDoItLaterException:
+            raised = True
+            break
+
+    assert raised, "random_run should sometimes raise IllDoItLaterException"
+
+def test_random_procrastinate_applies_a_wrapper():
+    """Test that random_wrapper applies one of the decorators and modifies function behavior."""
+    @random_procrastinate
+    def test_func():
+        return "Function executed!"
+
+    # Try calling it and make sure it behaves in a decorated way
+    try:
+        result = test_func("You're amazing!")  # In case require_positive_input is selected
+        assert result is None or result == "Function executed!"
+    except IllDoItLaterException:
+        pass  # Expected if random_fail_wrapper was chosen
+
+def test_random_procrastinate_changes_behavior():
+    """Test that random_wrapper randomly applies different wrappers."""
+    applied_wrappers = set()
+
+    for _ in range(10):  # Run multiple times to observe different behaviors
+        @random_procrastinate
+        def test_func():
+            return "Function executed!"
+
+        try:
+            result = test_func("You're amazing!")
+            if result == "Function executed!":
+                applied_wrappers.add("ran_successfully")
+            elif result is None:
+                applied_wrappers.add("required_positive_input")
+        except IllDoItLaterException:
+            applied_wrappers.add("ill_do_it_later")
+
+    # Ensure that at least two different behaviors were observed
+    assert len(applied_wrappers) >= 2, "random_wrapper should apply different behaviors randomly"
