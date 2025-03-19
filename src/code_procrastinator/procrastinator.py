@@ -1,6 +1,7 @@
 import random
 import functools
 import time
+import webbrowser
 import pytest
 
 # --- Keywords and Responses for Reaffirmation ---
@@ -97,12 +98,38 @@ def excuse_wrapper(func):
             print(end_message[1])
     return wrapper
 
+
+def print_excuse():
+    responses = [
+        "Procrastinating...",
+        ":3",
+        "Wow this 4 hour video essay looks interesting...",
+        "Looks like I got some time...",
+        "I'll do it tomorrow",
+        "Not in the right headspace today... I'll just go to bed",
+        "Creativity is hard, you can't just have ideas on command",
+        "If it weren’t for the last minute, nothing would get done"
+    ]
+    print(random.choice(responses))
+
+def mindlessly_browse():
+    websites = [
+        "https://en.wikipedia.org/wiki/Special:Random",
+        "https://theuselessweb.com/",
+        "https://www.youtube.com/",
+        "https://www.sporcle.com/games/"
+    ]
+    print("Let's take a internet break! :D")
+    webbrowser.open(random.choice(websites))
+
 def procrastinate(max_time, delay_count):
+    actions = [print_excuse, mindlessly_browse]
+
     delays = set()
     while len(delays) < delay_count:
-        delays.add(random.randint(0, max_time))
+        delays.add(random.randint(1, max_time))
 
     for delay in delays:
-        print(f"Procrastinating for {delay} seconds...")
+        random.choice(actions)()
         time.sleep(delay)
     return delays
