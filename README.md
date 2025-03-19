@@ -8,8 +8,24 @@ Instead of executing tasks efficiently, it gets *distracted*, mindlessly browses
 
 ---
 
+## **Installation**
+You can install **Code Procrastinator** from **PyPI** using `pip`:
+
+```sh
+pip install code-procrastinator
+```
+
 ## **Procrastinate()**
 The `procrastinate` function simulates what a human might do when procrastinating—whether it's scrolling the web, making excuses, or delaying execution.
+
+### **Usage***
+To use Code Procrastinator in your own Python projects, simply import and call the procrastinate function:
+```sh
+from code_procrastinator import procrastinate
+
+# Make your program procrastinate for up to 10 seconds, with 3 random delays
+procrastinate(10, 3)
+```
 
 ### **Function Behavior**
 - Randomly selects a number of **unique delays** between `0` and `max_time`.
@@ -18,7 +34,7 @@ The `procrastinate` function simulates what a human might do when procrastinatin
   - Printing **excuses for procrastination**.
   - Opening a **fun website** for distraction.
 
-### ⚙️ **Arguments**
+### **Arguments**
 | Argument    | Type | Description |
 |------------|------|-------------|
 | `max_time`  | `int`  | The maximum number of seconds for any delay. Must be greater than `0`. |
