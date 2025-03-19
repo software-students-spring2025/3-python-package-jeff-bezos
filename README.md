@@ -18,9 +18,9 @@ pip install code-procrastinator
 ## **Procrastinate()**
 The `procrastinate` function simulates what a human might do when procrastinating—whether it's scrolling the web, making excuses, or delaying execution.
 
-### **Usage***
+### **Usage**
 To use Code Procrastinator in your own Python projects, simply import and call the procrastinate function:
-```sh
+```python
 from code_procrastinator import procrastinate
 
 # Make your program procrastinate for up to 10 seconds, with 3 random delays
