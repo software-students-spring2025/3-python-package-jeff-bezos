@@ -10,6 +10,7 @@ Instead of executing tasks efficiently, it gets *distracted*, mindlessly browses
 
 ## **Installation**
 You can install **Code Procrastinator** from **PyPI** using `pip`:
+This package requires Python 3.7 or higher
 
 ```sh
 pip install code-procrastinator
@@ -30,8 +31,9 @@ pip install pipenv
 pipenv shell
 ```
 
-### **Create a Virtual Environment**
-Before committing anything, ensure your contributions pass the unit tests
+### **Building**
+We automatically upload our package to PyPi using twine.\
+Before merging anything, ensure your contributions pass the unit tests
 ```sh
 pytest procrastinator.py
 ```
