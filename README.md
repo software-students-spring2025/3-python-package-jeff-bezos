@@ -15,6 +15,27 @@ You can install **Code Procrastinator** from **PyPI** using `pip`:
 pip install code-procrastinator
 ```
 
+## **Contributing**
+Want to improve **Code Procrastinator?** Follow these steps to set up your development environment!
+
+### **Clone Repository**
+```sh
+git clone https://github.com/software-students-spring2025/3-python-package-jeff-bezos.git
+cd 3-python-package-jeff-bezos
+```
+
+### **Create a Virtual Environment**
+```sh
+pip install pipenv
+pipenv shell
+```
+
+### **Create a Virtual Environment**
+Before committing anything, ensure your contributions pass the unit tests
+```sh
+pytest procrastinator.py
+```
+
 ## **Procrastinate()**
 The `procrastinate` function simulates what a human might do when procrastinating—whether it's scrolling the web, making excuses, or delaying execution.
 
