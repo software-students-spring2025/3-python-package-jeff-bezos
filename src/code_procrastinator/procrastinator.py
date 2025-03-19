@@ -26,6 +26,18 @@ DEFAULT_RESPONSES = [
     "I need some encouragement before I start.",
 ]
 
+# Responses for Excuse Function
+
+EXCUSE_INIT_MESSAGE = ["Alright, let's get started!", "Preparing to output solution...", 
+                         "Optimizing best possible answer"]
+EXCUSE_MESSAGE = [
+            "Almost done! Just need a little more time...", 
+            "Wait, I just realized there's a better way to do this... let me rethink everything.",
+            "Someone just deleted my work... I need to start over again..."
+        ]
+
+EXCUSE_END_MESSAGE = ["Ok done!", "TBH... forget this I'll do it tomorrow."]
+
 # --- Decorator to Require Positive Input ---
 def require_positive_input(func):
     """
@@ -68,33 +80,25 @@ def excuse_wrapper(func):
     @functools.wraps(func)
     def wrapper(x, y):
         # Initial Message
-        init_messages = ["Alright, let's get started!", "Preparing to output solution...", 
-                         "Optimizing best possible answer"]
-        print(random.choice(init_messages))
+
+        print(random.choice(EXCUSE_INIT_MESSAGE))
         time.sleep(5)
         print("Processing... 25% done.")
         time.sleep(2)
         print("Still thinking... 50% done.")
         time.sleep(3)
 
-        # Excuse Message
-        excuse_messages = [
-            "Almost done! Just need a little more time...", 
-            "Wait, I just realized there's a better way to do this... let me rethink everything.",
-            "Someone just deleted my work... I need to start over again..."
-        ]
-        print(random.choice(excuse_messages))
+        print(random.choice(EXCUSE_MESSAGE))
         time.sleep(5)
 
         # Ending Message and Decision to Execute
-        end_message = ["Ok done!", "TBH... forget this I'll do it tomorrow."]
         res = random.randint(0, 1)
         if res == 0:
-            print(end_message[0])
+            print(EXCUSE_END_MESSAGE[0])
             time.sleep(1)
             return func(x, y)
         else:
-            print(end_message[1])
+            print(EXCUSE_END_MESSAGE[1])
     return wrapper
 
 def procrastinate(max_time, delay_count):

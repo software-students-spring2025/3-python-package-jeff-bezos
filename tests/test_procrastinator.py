@@ -1,4 +1,7 @@
 import pytest
+from src.code_procrastinator.procrastinator import excuse_wrapper, EXCUSE_INIT_MESSAGE, EXCUSE_MESSAGE, EXCUSE_END_MESSAGE
+import logging
+logger = logging.getLogger(__name__)
 
 # First test group: a simple hello world test.
 class Tests:
@@ -35,6 +38,8 @@ def test_reaffirm_program_with_negative_input(capsys):
     # None since the decorator skips execution.
     assert result is None
 
+
+
 # Tests for procrasintaor 
 @pytest.fixture
 def mock_sleep(monkeypatch):
@@ -60,3 +65,19 @@ def test_procrastinator(mock_sleep, capsys):
     # Check if the correct number of lines were printed
     assert len(output_lines) == delay_count
     assert all("Procrastinating for" in line for line in output_lines)
+
+def test_excuse_function_outputs(capsys):
+    @excuse_wrapper
+    def add(x, y):
+        return x + y
+    
+    add(1, 2)
+    output = capsys.readouterr().out.strip().split("\n")
+    # First response expected
+    assert output[0] in EXCUSE_INIT_MESSAGE
+    
+    # Second response expected
+    assert output[3] in EXCUSE_MESSAGE
+    
+    # Last response expected
+    assert output[4] in EXCUSE_END_MESSAGE
