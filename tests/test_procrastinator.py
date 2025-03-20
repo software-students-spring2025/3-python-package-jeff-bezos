@@ -10,7 +10,7 @@ class Tests:
         assert string == "Hello World"
 
 # Second test group: tests for the reaffirm_program function.
-from src.code_procrastinator.procrastinator import reaffirm_program, procrastinate, time, POSITIVE_RESPONSES, DEFAULT_RESPONSES, random_fail_wrapper, IllDoItLaterException, random_procrastinate
+from src.code_procrastinator.procrastinator import reaffirm_program, procrastinate, time, POSITIVE_RESPONSES, DEFAULT_RESPONSES, random_fail_wrapper, IllDoItLaterException, RUN_MESSAGE
 
 def test_reaffirm_program_with_positive_input(capsys):
     # Provide a message containing at least one positive keyword.
@@ -82,8 +82,8 @@ def test_excuse_function_outputs(capsys):
     # Last response expected
     assert output[4] in EXCUSE_END_MESSAGE
 
-def test_random_fail_wrapper_executes():
-    """Test that random_run executes the function when it does not raise an exception."""
+def test_random_fail_wrapper_executes(capsys):
+    """Test that random_fail_wrapper executes the function and prints a valid message when it does not raise an exception."""
     @random_fail_wrapper
     def test_func():
         return "Function executed!"
@@ -92,56 +92,58 @@ def test_random_fail_wrapper_executes():
     for _ in range(10):
         try:
             result = test_func()
+            # Capture printed output
+            captured = capsys.readouterr().out.strip()
+            # Verify the function returns the expected result
             assert result == "Function executed!"
+            # Check that the printed output contains one of the expected messages
+            assert any(msg in captured for msg in RUN_MESSAGE), f"Output '{captured}' is not one of the expected messages."
         except IllDoItLaterException:
-            pass  # It's okay if it fails, since it's expected sometimes
+            # Clear captured output and continue if an exception is raised
+            capsys.readouterr()
+            pass
 
-def test_random_fail_wrapper_raises_exception():
-    """Test that random_run sometimes raises IllDoItLaterException."""
+def test_random_fail_wrapper_raises_exception(capsys):
+    """Test that random_fail_wrapper sometimes raises IllDoItLaterException and does not print any message when exception is raised."""
     @random_fail_wrapper
     def test_func():
         return "Function executed!"
 
     raised = False
     for _ in range(10):  # Run multiple times to increase the chance of failure
+        # Clear any previous captured output
+        capsys.readouterr()  
         try:
             test_func()
         except IllDoItLaterException:
             raised = True
+            # Immediately capture output after exception is raised
+            captured = capsys.readouterr().out.strip()
+            # Assert that nothing was printed in this iteration
+            assert captured == "", f"Expected no output when exception is raised, but got '{captured}'."
             break
 
-    assert raised, "random_run should sometimes raise IllDoItLaterException"
+    assert raised, "random_fail_wrapper should sometimes raise IllDoItLaterException"
 
-def test_random_procrastinate_applies_a_wrapper():
-    """Test that random_wrapper applies one of the decorators and modifies function behavior."""
-    @random_procrastinate
+def test_random_fail_wrapper_prints_expected_message(capsys):
+    """Test that random_fail_wrapper prints one of the expected messages when executing the function."""
+    @random_fail_wrapper
     def test_func():
         return "Function executed!"
-
-    # Try calling it and make sure it behaves in a decorated way
-    try:
-        result = test_func("You're amazing!")  # In case require_positive_input is selected
-        assert result is None or result == "Function executed!"
-    except IllDoItLaterException:
-        pass  # Expected if random_fail_wrapper was chosen
-
-def test_random_procrastinate_changes_behavior():
-    """Test that random_wrapper randomly applies different wrappers."""
-    applied_wrappers = set()
-
-    for _ in range(10):  # Run multiple times to observe different behaviors
-        @random_procrastinate
-        def test_func():
-            return "Function executed!"
-
+    
+    # We'll try multiple times to ensure we get a successful execution (i.e. no exception)
+    for _ in range(20):
         try:
-            result = test_func("You're amazing!")
+            result = test_func()
             if result == "Function executed!":
-                applied_wrappers.add("ran_successfully")
-            elif result is None:
-                applied_wrappers.add("required_positive_input")
+                # Capture printed output
+                captured = capsys.readouterr().out.strip()
+                # Verify that the captured output matches one of the expected messages.
+                assert any(msg in captured for msg in RUN_MESSAGE), f"Printed output '{captured}' not in expected messages"
+                return  # Test passed if one valid message is found.
         except IllDoItLaterException:
-            applied_wrappers.add("ill_do_it_later")
+            # If the exception is raised, we simply try again.
+            continue
 
-    # Ensure that at least two different behaviors were observed
-    assert len(applied_wrappers) >= 2, "random_wrapper should apply different behaviors randomly"
+    # If we never get a successful execution, skip the test.
+    pytest.skip("Function never executed successfully to capture printed output.")

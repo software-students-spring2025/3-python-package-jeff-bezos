@@ -139,7 +139,3 @@ def random_fail_wrapper(func):
             print(random.choice(RUN_MESSAGE))
             return func(*args, **kwargs)
     return wrapper
-def random_procrastinate(func):
-    wrappers = [random_fail_wrapper, excuse_wrapper, reaffirm_program]
-    selected_wrapper = random.choice(wrappers)
-    return selected_wrapper(func)
