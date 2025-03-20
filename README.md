@@ -149,6 +149,22 @@ from code_procrastinator import reaffirm_program
 result = reaffirm_program("You're awesome and brilliant!")
 print(result)  # Expected output: "Program is now running! Let's do this!"
 ```
+### **Function Behavior**
+- **Positive Check**: Scans the input message for predefined positive keywords (e.g., "awesome", "fantastic", "great").
+- **Encouragement**: If a positive keyword is found, it prints a random motivational message from a set of positive responses.
+- **Confirmation**: Returns the string "Program is now running! Let's do this!" to signal that the program can proceed.
+- **Default Behavior**: If no positive keywords are detected, it prints a default message requesting encouragement and returns None.
+
+### **Arguments**
+
+| Argument      | Type  | Description                                                            |
+| ------------- | ----- | ---------------------------------------------------------------------- |
+| `message`     | `str`  | The input message which is checked for positive keywords.             |
+
+### **Return Value**
+- **`str`**: Returns "Program is now running! Let's do this!" if the input contains positive keywords.
+- **`None`**:Returns None if no positive keywords are found.
+
 
 ## **random_fail_wrapper()**
 
