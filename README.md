@@ -80,3 +80,27 @@ Procrastinating...
 Wow, this 4-hour video essay looks interesting...
 Procrastinating...
 I'll do it tomorrow
+```
+
+## **excuse_wrapper()**
+The `excuse_wrapper` function will also procrasinate on providing correct output, will relay an excuse, and has a chance to completely fail on the task.
+
+### **Usage**
+Import excuse_wrapper, and use it as a decorator for the original function
+```python
+from code_procrastinator import excuse_wrapper
+@procrastinator.excuse_wrapper
+def add(x, y):
+    return x + y
+add(1, 2)
+```
+## **Example Usage**
+```python
+>>> add(1. 2)
+Optimizing best possible answer
+Processing... 25% done.
+Still thinking... 50% done.
+Someone just deleted my work... I need to start over again...
+TBH... forget this I'll do it tomorrow.
+```
+
