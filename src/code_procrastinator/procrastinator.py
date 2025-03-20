@@ -3,7 +3,6 @@ import functools
 import time
 import webbrowser
 import os
-import pytest
 
 class IllDoItLaterException(Exception):
     """
