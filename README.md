@@ -6,6 +6,15 @@
 
 Instead of executing tasks efficiently, it gets *distracted*, mindlessly browses the internet, or justifies its procrastination with excuses. 
 
+[PyPI Link](https://pypi.org/project/code-procrastinator/)
+
+---
+## Team Members
+[Bryant To](https://github.com/bryantto08)
+[Andrew Bao](https://github.com/andrew-bao)
+[Jasmine Zhang](https://github.com/Jasminezhang666666)
+[Imran Ahmed](https://github.com/mxa5251)
+
 ---
 
 ## **Installation**
@@ -34,6 +43,8 @@ pipenv shell
 ### **Building**
 We automatically upload our package to PyPi using twine.\
 Before merging anything, ensure your contributions pass the unit tests
+
+Important: PyPI will not let you upload a duplicate version, make sure to increment your version in your pyproject.toml file before pushing any changes. (Ex: 0.1.6 -> 0.1.7)
 ```sh
 pytest procrastinator.py
 ```
