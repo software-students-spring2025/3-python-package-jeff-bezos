@@ -150,3 +150,19 @@ def test_random_fail_wrapper_prints_expected_message(capsys):
 
     # If we never get a successful execution, skip the test.
     pytest.skip("Function never executed successfully to capture printed output.")
+
+def test_excuse_function_outputs(capsys):
+    @excuse_wrapper
+    def add(x, y):
+        return x + y
+    
+    add(1, 2)
+    output = capsys.readouterr().out.strip().split("\n")
+    # First response expected
+    assert output[0] in EXCUSE_INIT_MESSAGE
+    
+    # Second response expected
+    assert output[3] in EXCUSE_MESSAGE
+    
+    # Last response expected
+    assert output[4] in EXCUSE_END_MESSAGE
