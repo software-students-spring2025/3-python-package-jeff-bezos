@@ -6,7 +6,7 @@ def main():
         return x + y
     print(add(1, 2))
 
-    procrastinator.procrastinate(25, 3)
+    procrastinator.procrastinate(10, 3)
     
 
 if __name__ == "__main__":

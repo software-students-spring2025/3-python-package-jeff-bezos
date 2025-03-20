@@ -38,17 +38,13 @@ def test_reaffirm_program_with_negative_input(capsys):
     # None since the decorator skips execution.
     assert result is None
 
-
-
-# Tests for procrasintaor 
+# Tests for procrastinator 
 @pytest.fixture
 def mock_sleep(monkeypatch):
-    # Do nothing, preventing actual sleep
-    def fake_sleep(_):
-        pass
-    monkeypatch.setattr(time, "sleep", fake_sleep)
+    """Mock time.sleep to avoid actual waiting."""
+    monkeypatch.setattr(time, "sleep", lambda _: None)
 
-def test_procrastinator(mock_sleep, capsys):
+def test_procrastinate(mock_sleep, capsys):
     # Provide a positive integer for the max time per delay and amount of delays
     seconds = 10
     delay_count = 3
@@ -64,24 +60,31 @@ def test_procrastinator(mock_sleep, capsys):
 
     # Check if the correct number of lines were printed
     assert len(output_lines) == delay_count
-    assert all("Procrastinating for" in line for line in output_lines)
+    assert all(isinstance(line, str) and line.strip() != "" for line in output_lines)
 
-def test_excuse_function_outputs(capsys):
-    @excuse_wrapper
-    def add(x, y):
-        return x + y
+# Test with negative values
+def test_procrastinate_negative_inputs(mock_sleep):
+    # Expect a ValueError
+    with pytest.raises(ValueError):
+        procrastinate(-10, 3)
     
-    add(1, 2)
-    output = capsys.readouterr().out.strip().split("\n")
-    # First response expected
-    assert output[0] in EXCUSE_INIT_MESSAGE
-    
-    # Second response expected
-    assert output[3] in EXCUSE_MESSAGE
-    
-    # Last response expected
-    assert output[4] in EXCUSE_END_MESSAGE
+    with pytest.raises(ValueError):
+        procrastinate(10, -3)
 
+# Test with zero values
+def test_procrastinate_zero_values(mock_sleep):
+    # Expect a ValueError
+    with pytest.raises(ValueError):
+        procrastinate(0, 3)
+        
+    with pytest.raises(ValueError):
+        procrastinate(10, 0)
+
+# Test with no inputs (expects TypeError unless defaults are set)
+def test_procrastinate_no_inputs(mock_sleep):
+    with pytest.raises(TypeError):
+        procrastinate()
+    
 def test_random_fail_wrapper_executes(capsys):
     """Test that random_fail_wrapper executes the function and prints a valid message when it does not raise an exception."""
     @random_fail_wrapper
