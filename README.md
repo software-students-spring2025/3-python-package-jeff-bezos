@@ -104,3 +104,13 @@ Someone just deleted my work... I need to start over again...
 TBH... forget this I'll do it tomorrow.
 ```
 
+## **reaffirm_program()**
+The `reaffirm_program` function checks if the input message contains any positive keywords. When it detects encouragement, it prints a motivational message and confirms that the program is ready to continue running. This function is useful when you want your application to "get back on track" after a period of procrastination.
+
+**Example Usage**
+```python
+from code_procrastinator import reaffirm_program
+
+# Provide a message with positive keywords to trigger the function
+result = reaffirm_program("You're awesome and brilliant!")
+print(result)  # Expected output: "Program is now running! Let's do this!"
