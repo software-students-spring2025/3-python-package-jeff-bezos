@@ -38,6 +38,20 @@ def test_reaffirm_program_with_negative_input(capsys):
     # None since the decorator skips execution.
     assert result is None
 
+def test_reaffirm_program_consistency(capsys):
+    """
+    Test reaffirm_program multiple times with positive input to ensure consistent behavior.
+    Each invocation should print a positive response and return the running message.
+    """
+    positive_message = "You're fantastic and brilliant!"
+    for _ in range(5):
+        result = reaffirm_program(positive_message)
+        captured = capsys.readouterr().out.strip()
+        # Ensure the printed response is one of the positive responses.
+        assert captured in POSITIVE_RESPONSES, f"Printed response '{captured}' not in expected positive responses."
+        # Ensure the function returns the running message.
+        assert result == "Program is now running! Let's do this!"
+
 # Tests for procrastinator 
 @pytest.fixture
 def mock_sleep(monkeypatch):
@@ -150,3 +164,19 @@ def test_random_fail_wrapper_prints_expected_message(capsys):
 
     # If we never get a successful execution, skip the test.
     pytest.skip("Function never executed successfully to capture printed output.")
+
+def test_excuse_function_outputs(capsys):
+    @excuse_wrapper
+    def add(x, y):
+        return x + y
+    
+    add(1, 2)
+    output = capsys.readouterr().out.strip().split("\n")
+    # First response expected
+    assert output[0] in EXCUSE_INIT_MESSAGE
+    
+    # Second response expected
+    assert output[3] in EXCUSE_MESSAGE
+    
+    # Last response expected
+    assert output[4] in EXCUSE_END_MESSAGE

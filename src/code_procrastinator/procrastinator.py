@@ -5,7 +5,13 @@ import webbrowser
 import os
 
 class IllDoItLaterException(Exception):
+    """
+    Custom exception used to simulate procrastination by halting execution
+    with a humorous, randomly chosen failure message.
+    """
     def __init__(self):
+        # Call the base Exception class initializer with a random message.
+        # The message is chosen from the FAILURE_MESSAGE list.
         super().__init__(random.choice(FAILURE_MESSAGE))
 
 # --- Keywords and Responses for Reaffirmation ---
@@ -166,12 +172,24 @@ def procrastinate(max_time, delay_count):
     return delays   
 
 def random_fail_wrapper(func):
+    """
+    A decorator that wraps a function to simulate a random failure.
+    
+    It generates a random number between 1 and 100. If the number is less than 50,
+    the decorator simulates a failure by raising an IllDoItLaterException.
+    Otherwise, it prints a random message from RUN_MESSAGE and then calls the function.
+    """
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
+        # Generate a random integer between 1 and 100.
         value = random.randint(1, 100)
+        # If the random value is less than 50, simulate failure.
         if value < 50:
             raise IllDoItLaterException()
+        # Otherwise, print a randomly selected run message.
         else:
             print(random.choice(RUN_MESSAGE))
+            # Execute the original function with the provided arguments.
             return func(*args, **kwargs)
+    # Return the wrapped function.
     return wrapper
