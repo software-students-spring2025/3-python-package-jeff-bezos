@@ -15,5 +15,11 @@ def main():
     result = procrastinator.reaffirm_program(user_message)
     print("reaffirm_program returned:", result)
 
+    #Test the random excuse wrapper
+    @procrastinator.random_fail_wrapper
+    def sub(x, y):
+        return x - y
+    print(f"Result from sub(): {sub(1, 2)}")
+
 if __name__ == "__main__":
     main()
